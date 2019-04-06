@@ -1,13 +1,14 @@
-﻿using System;
+﻿using BusinessLayer;
+using System;
 using System.Globalization;
 
-namespace ConsoleApp
+namespace ConsoleUI
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("For registering you order, please specify");
+            Console.WriteLine("For claculate you order, please specify");
 
             var amount = GetNumberOfBicycles();
             var unitPrice = GetUnitPrice();
@@ -18,13 +19,20 @@ namespace ConsoleApp
             var order = new Order(amount, unitPrice, stateCode);
 
             Console.WriteLine("Raw Value: " + order.RawValue.ToString("0,0", CultureInfo.InvariantCulture));
-            Console.WriteLine("Discount Rate: " + order.GetDiscountRate().ToString("%#0.00", CultureInfo.InvariantCulture));
+            Console.WriteLine("Discount Rate: " + order.GetDiscountPercentage().ToString("%#0.00", CultureInfo.InvariantCulture));
             Console.WriteLine("Tax Rate: " + Helper.TaxRates[stateCode].ToString("%#0.00", CultureInfo.InvariantCulture));
             Console.WriteLine("Total Price: " + order.GetTotalPrice().ToString("0,0", CultureInfo.InvariantCulture));
 
+            Console.WriteLine("************");
             Console.WriteLine();
-            Console.Write("Press any key to finish...");
-            Console.ReadLine();
+            Console.Write("Continue with next order (Y/N)? ");
+
+            if (Console.ReadLine().ToUpperInvariant() == "Y")
+            {
+                Console.WriteLine();
+
+                Main(null);
+            }
         }
 
         static long GetNumberOfBicycles()
@@ -82,7 +90,7 @@ namespace ConsoleApp
             catch (Exception ex)
             {
                 //Console.WriteLine(ex.ToString()); To be displayed in development environment; after adding necessary configs.
-                Console.WriteLine($"Please specify the state code in correct format.");
+                Console.WriteLine("Please specify the state code in correct format.");
 
                 result = GetStateCode();
             }
@@ -90,7 +98,7 @@ namespace ConsoleApp
             if (!Enum.IsDefined(typeof(StateEnum), result))
             {
                 //Console.WriteLine(ex.ToString()); To be displayed in development environment; after adding necessary configs.
-                Console.WriteLine($"Please specify the state code in correct format.");
+                Console.WriteLine("Please specify the state code in correct format.");
 
                 result = GetStateCode();
             }
